@@ -14,6 +14,11 @@ config/name="Dream Defender"
 run/main_scene="res://Scenes/Game.tscn"
 config/icon="res://icon.png"
 
+[display]
+
+window/size/width=1920
+window/size/height=1080
+
 [global]
 
 external=false
@@ -63,6 +68,11 @@ toggle_mouse_mode={
 jump={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":32,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
+ ]
+}
+debug_spawn={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":78,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
  ]
 }
 
