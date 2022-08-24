@@ -43,6 +43,7 @@ public class Player : KinematicBody
         {
             RotateY(Mathf.Deg2Rad(-mouseMotion.Relative.x * mouseSensitivity));
             head.RotateX(Mathf.Deg2Rad(-mouseMotion.Relative.y * mouseSensitivity));
+            //head.Rotation.x = Mathf.Clamp(head.Rotation.x, Mathf.Deg2Rad(-89), Mathf.Deg2Rad(89));
         }
     }
 
