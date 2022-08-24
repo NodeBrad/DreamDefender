@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scripts/DebugSphere.cs" type="Script" id=1]
+
+[sub_resource type="SphereMesh" id=1]
+radial_segments = 32
+rings = 6
+
+[node name="DebugSphere" type="Spatial"]
+script = ExtResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+transform = Transform( 0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0.2, 0 )
+mesh = SubResource( 1 )
+
+[node name="RayCast" type="RayCast" parent="MeshInstance"]
+transform = Transform( 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, -0.5, 0 )
+enabled = true
+cast_to = Vector3( 0, -0.2, 0 )

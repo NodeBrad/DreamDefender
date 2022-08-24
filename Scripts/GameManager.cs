@@ -8,19 +8,38 @@ public class GameManager : Spatial
 
     [Export]
     public PackedScene enemyInstance;
+    [Export]
+    public PackedScene turretInstance;
 
     public List<Spatial> enemyList;
+    private Timer timer;
+
+    private int[] waves = { 0, 5, 10 };
+    private int waveCounter = 0;
+    private int currentWave = 0;
+    private bool canSpawn = false;
 
     public override void _Ready()
     {
         instance = this;
         enemyList = new List<Spatial>();
+        timer = GetNode<Timer>("SpawnTimer");
     }
 
     public override void _Process(float delta)
     {
         if (Input.IsActionJustPressed("debug_spawn"))
-            spawnEnemy();  
+        {
+            nextWave();
+            timer.Start(-1);
+        }
+
+        if (waveCounter < waves[currentWave] && canSpawn)
+        {
+            spawnEnemy();
+            waveCounter++;
+            canSpawn = false;
+        }
     }
 
     public void AddEnemy(Spatial enemy)
@@ -51,5 +70,23 @@ public class GameManager : Spatial
                 return true;
         }
         return false;
+    }
+
+    private void onSpawnTimeout()
+    {
+        canSpawn = true;
+    }
+
+    private void nextWave()
+    {
+        waveCounter = 0;
+        currentWave++;
+    }
+
+    public void PlaceTurret(Vector3 location)
+    {
+        Turret turret = (Turret)turretInstance.Instance();
+        turret.GlobalTranslation = location;
+        AddChild(turret);
     }
 }

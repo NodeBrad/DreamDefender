@@ -14,10 +14,15 @@ public class Player : KinematicBody
     private Vector3 velocity = Vector3.Zero;
     private Vector3 snapVector = Vector3.Zero;
     private Spatial head;
+    private RayCast ray;
+    private DebugSphere ds;
+    private bool canPlace = false;
 
     public override void _Ready()
     {
         head = GetNode<Spatial>("Head");
+        ray = GetNode<RayCast>("Head/RayCast");
+        ds = GetNode<DebugSphere>("DebugSphere");
 
         Input.MouseMode = Input.MouseModeEnum.Captured; // Capture the mouse
     }
@@ -56,6 +61,9 @@ public class Player : KinematicBody
         applyGravity(delta);
         jump();
         velocity = MoveAndSlide(velocity, Vector3.Up);
+
+        checkPlacement();
+        manageBuilding();
     }
 
     private Vector3 getInputVector()
@@ -112,9 +120,35 @@ public class Player : KinematicBody
         {
             velocity.y = jumpImpulse;
         }
-        if ((Input.IsActionJustReleased("jump")) && (velocity.y>jumpImpulse/2))
+        if ((Input.IsActionJustReleased("jump")) && (velocity.y > jumpImpulse / 2))
         {
             velocity.y = jumpImpulse / 2;
+        }
+    }
+
+    private void checkPlacement()
+    {
+        if (ray.GetCollider() != null)
+        {
+            ds.GlobalTranslation = ray.GetCollisionPoint();
+            if (ds.isOnFloor())
+            {
+                ds.Visible = true;
+                canPlace = true;
+            }
+        }
+        else
+        {
+            ds.Visible = false;
+            canPlace = false;
+        }
+    }
+
+    private void manageBuilding()
+    {
+        if ((Input.IsActionJustPressed("interact")) && canPlace)
+        {
+            GameManager.instance.PlaceTurret(ds.GlobalTranslation);
         }
     }
 

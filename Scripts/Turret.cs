@@ -10,6 +10,8 @@ public class Turret : Spatial
 
     private float range = 10f;
     private float damage = 50f;
+    private float fireRate = 0.5f;
+    private bool canShoot = true;
 
     [Export]
     public PackedScene bulletInstance;
@@ -18,20 +20,23 @@ public class Turret : Spatial
         turretHead = GetNode<MeshInstance>("TBody/THead");
         barrelTip = GetNode<Position3D>("TBody/THead/TBarrel/TBarrelTip");
         timer = GetNode<Timer>("Timer");
+        timer.WaitTime = fireRate;
     }
 
     public override void _Process(float delta)
     {
         findTarget();
         lookAtTarget();
-        if (Input.IsActionJustPressed("debug_shoot_turret") && target!=null)
+        if (canShoot && target != null)
+        {
             shoot();
+            timer.Start();
+        }
     }
 
     private void onTimeout()
     {
-        if (target!=null)
-            shoot();
+        canShoot = true;
     }
 
     private void findTarget()
@@ -62,7 +67,7 @@ public class Turret : Spatial
     {
         Bullet bullet = (Bullet)bulletInstance.Instance();
         AddChild(bullet);
-        
         bullet.Initialise(barrelTip.GlobalTranslation, target.GlobalTranslation, damage);
+        canShoot = false;
     }
 }

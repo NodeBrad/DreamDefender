@@ -3,7 +3,7 @@ using System;
 
 public class Enemy : Spatial
 {
-    private int speed = 5;
+    private int speed = 10;
     private float health = 100f;
     private PathFollow pf;
     private bool initialised = false;

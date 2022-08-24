@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Scripts/Player.cs" type="Script" id=1]
+[ext_resource path="res://Scenes/DebugSphere.tscn" type="PackedScene" id=2]
 
 [sub_resource type="CapsuleMesh" id=1]
 radius = 0.5
@@ -26,3 +27,11 @@ shape = SubResource( 2 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0 )
 
 [node name="Camera" type="Camera" parent="Head"]
+
+[node name="RayCast" type="RayCast" parent="Head"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -1.13261 )
+enabled = true
+cast_to = Vector3( 0, -8, 0 )
+
+[node name="DebugSphere" parent="." instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0 )

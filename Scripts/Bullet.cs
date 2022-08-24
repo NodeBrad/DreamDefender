@@ -3,7 +3,7 @@ using System;
 
 public class Bullet : RigidBody
 {
-    private float speed = 10f;
+    private float speed = 50f;
     private float damage = 50f;
 
     private void onBodyEntered(Node body)
