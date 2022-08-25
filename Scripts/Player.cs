@@ -36,14 +36,14 @@ public class Player : KinematicBody
             Input.MouseMode = Input.MouseModeEnum.Captured; // Capture the mouse
         }
 
-        // Toggle window capture
-        if (@event.IsActionPressed("toggle_mouse_mode"))
-        {
-            if (Input.MouseMode == Input.MouseModeEnum.Captured)
-                Input.MouseMode = Input.MouseModeEnum.Visible;
-            else
-                Input.MouseMode = Input.MouseModeEnum.Captured;
-        }
+        //// Toggle window capture
+        //if (@event.IsActionPressed("toggle_mouse_mode"))
+        //{
+        //    if (Input.MouseMode == Input.MouseModeEnum.Captured)
+        //        Input.MouseMode = Input.MouseModeEnum.Visible;
+        //    else
+        //        Input.MouseMode = Input.MouseModeEnum.Captured;
+        //}
 
         // Handle mouse movement
         if ((@event is InputEventMouseMotion mouseMotion) && (Input.MouseMode == Input.MouseModeEnum.Captured))
@@ -67,6 +67,11 @@ public class Player : KinematicBody
 
         checkPlacement();
         manageBuilding();
+
+        if (ray.GetCollider() != null)
+            GD.Print("Yes");
+        else
+            GD.Print("no");
     }
 
     private Vector3 getInputVector()
@@ -131,7 +136,7 @@ public class Player : KinematicBody
 
     private void checkPlacement()
     {
-        if (ray.GetCollider() != null)
+        if (ray.GetCollider() != null && GameManager.instance.IsPlacing())
         {
             ds.GlobalTranslation = ray.GetCollisionPoint();
             if (ds.isOnFloor())
@@ -149,7 +154,10 @@ public class Player : KinematicBody
 
     private void manageBuilding()
     {
-        if ((Input.IsActionJustPressed("interact")) && canPlace)
+        if (!GameManager.instance.IsPlacing())
+            return;
+
+        if ((Input.IsActionJustPressed("left_click")) && canPlace)
         {
             GameManager.instance.PlaceTurret(ds.GlobalTranslation);
         }

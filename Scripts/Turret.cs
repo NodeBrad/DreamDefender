@@ -10,7 +10,7 @@ public class Turret : Spatial
 
     private float range = 10f;
     private float damage = 50f;
-    private float fireRate = 0.5f;
+    private float fireRate = 1f;
     private bool canShoot = true;
 
     [Export]
@@ -45,13 +45,12 @@ public class Turret : Spatial
         float nearestDistance = 100;
         target = null;
 
-        foreach (Spatial node in GameManager.instance.enemyList)
+        foreach (KinematicBody node in GameManager.instance.enemyList)
         {
-            KinematicBody nodeMesh = node.GetNode<KinematicBody>("Path/PathFollow/KinematicBody");
-            float nodeDistance = nodeMesh.GlobalTranslation.DistanceTo(GlobalTranslation);
+            float nodeDistance = node.GlobalTranslation.DistanceTo(GlobalTranslation);
             if (nodeDistance < range && nearestDistance > nodeDistance)
             {
-                target = nodeMesh;
+                target = node;
                 nearestDistance = nodeDistance;
             }
         }
@@ -60,14 +59,18 @@ public class Turret : Spatial
     private void lookAtTarget()
     {
         if (target != null)
-            turretHead.LookAt(target.GlobalTranslation, Vector3.Up);
+        {
+            Vector3 enemyHead = target.GetNode<Position3D>("EnemyHead").GlobalTranslation;
+            turretHead.LookAt(enemyHead, Vector3.Up);
+        }
     }
 
     private void shoot()
     {
         Bullet bullet = (Bullet)bulletInstance.Instance();
         AddChild(bullet);
-        bullet.Initialise(barrelTip.GlobalTranslation, target.GlobalTranslation, damage);
+        Vector3 enemyHead = target.GetNode<Position3D>("EnemyHead").GlobalTranslation;
+        bullet.Initialise(barrelTip.GlobalTranslation, enemyHead, damage);
         canShoot = false;
     }
 }

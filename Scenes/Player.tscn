@@ -12,7 +12,6 @@ radius = 0.5
 height = 2.0
 
 [node name="Player" type="KinematicBody"]
-collision_mask = 0
 script = ExtResource( 1 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
@@ -32,6 +31,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0 )
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -1.13261 )
 enabled = true
 cast_to = Vector3( 0, -8, 0 )
+collision_mask = 4
 
 [node name="DebugSphere" parent="." instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0 )
