@@ -56,7 +56,7 @@ material = ExtResource( 1 )
 
 [node name="CSGBox6" type="CSGBox" parent="CSGCombiner"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 3, -10 )
-width = 9.9884
+width = 9.97789
 depth = 8.0
 material = ExtResource( 1 )
 

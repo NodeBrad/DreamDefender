@@ -9,7 +9,7 @@ public class Bullet : RigidBody
     private void onBodyEntered(Node body)
     {
         Node bodyRoot = body.GetParent().GetParent().GetParent();
-        if (GameManager.instance.isEnemy(bodyRoot as Spatial))
+        if (GameManager.instance.IsEnemy(bodyRoot as Spatial))
         {
             GD.Print("Enemy Hit!");
             Enemy e = bodyRoot as Enemy;

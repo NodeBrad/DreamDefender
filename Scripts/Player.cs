@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Security.Claims;
 
 public class Player : KinematicBody
 {
@@ -44,11 +45,13 @@ public class Player : KinematicBody
                 Input.MouseMode = Input.MouseModeEnum.Captured;
         }
 
+        // Handle mouse movement
         if ((@event is InputEventMouseMotion mouseMotion) && (Input.MouseMode == Input.MouseModeEnum.Captured))
         {
             RotateY(Mathf.Deg2Rad(-mouseMotion.Relative.x * mouseSensitivity));
             head.RotateX(Mathf.Deg2Rad(-mouseMotion.Relative.y * mouseSensitivity));
-            //head.Rotation.x = Mathf.Clamp(head.Rotation.x, Mathf.Deg2Rad(-89), Mathf.Deg2Rad(89));
+            float clampValue = Mathf.Clamp(head.Rotation.x, Mathf.Deg2Rad(-89), Mathf.Deg2Rad(89));
+            head.Rotation = new Vector3(clampValue, head.Rotation.y, head.Rotation.z);
         }
     }
 

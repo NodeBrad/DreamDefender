@@ -3,35 +3,28 @@ using System;
 
 public class Enemy : Spatial
 {
-    private int speed = 10;
-    private float health = 100f;
-    private PathFollow pf;
-    private bool initialised = false;
-    private KinematicBody body;
-    private Label label;
+    // Enemy Settings
+    private float speed = 10;
+    private float health = 200f;
+
+    private PathFollow path;
+
     public override void _Ready()
     {
-        pf = GetNode<PathFollow>("Path/PathFollow");
-        body = GetNode<KinematicBody>("Path/PathFollow/KinematicBody");
-        label = GetNode<Label>("Path/PathFollow/KinematicBody/Sprite3D/Viewport/Label");
+        path = GetNode<PathFollow>("Path/PathFollow");
     }
 
     public override void _Process(float delta)
     {
-        pf.Offset += speed * delta;
-
-        if (!initialised)
-        {
-            init();
-            initialised = true; 
-        }
-        label.Text = health.ToString();
+        // Move along path
+        path.Offset += speed * delta;
     }
 
-    private void init()
+    public void Initialise(float health, float speed)
     {
         GameManager.instance.AddEnemy(this);
-        label.Text = this.ToString();
+        this.health = health;
+        this.speed = speed;
     }
 
     public void TakeDamage(float damage)

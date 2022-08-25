@@ -17,7 +17,7 @@ public class GameManager : Spatial
     private int[] waves = { 0, 5, 10 };
     private int waveCounter = 0;
     private int currentWave = 0;
-    private bool canSpawn = false;
+    private bool canSpawn = true;
 
     public override void _Ready()
     {
@@ -57,15 +57,15 @@ public class GameManager : Spatial
 
     private void spawnEnemy()
     {
-        Node enemy = enemyInstance.Instance();
+        Enemy enemy = (Enemy)enemyInstance.Instance();
         AddChild(enemy);
+        enemy.Initialise(100f, 5);
     }
 
-    public bool isEnemy(Spatial node)
+    public bool IsEnemy(Spatial node)
     {
         foreach (Spatial n in enemyList)
         {
-            GD.Print("Comparing " + node + " from bullet to " + n + " from Manager List.");
             if (n == node)
                 return true;
         }
@@ -86,7 +86,7 @@ public class GameManager : Spatial
     public void PlaceTurret(Vector3 location)
     {
         Turret turret = (Turret)turretInstance.Instance();
-        turret.GlobalTranslation = location;
         AddChild(turret);
+        turret.GlobalTranslation = location;
     }
 }
