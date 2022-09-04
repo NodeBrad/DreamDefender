@@ -8,9 +8,9 @@ public class Turret : Spatial
     private KinematicBody target;
     private Timer timer;
 
-    private float range = 10f;
-    private float damage = 50f;
-    private float fireRate = 1f;
+    private float range = 5f;
+    private float damage = 10f;
+    private float fireRate = 0.2f;
     private bool canShoot = true;
 
     [Export]

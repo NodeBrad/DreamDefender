@@ -23,10 +23,18 @@ public class GameManager : Spatial
     public List<KinematicBody> enemyList;
     private Timer timer;
     private Position3D spawnPosition3D;
+    private Position3D basePosition3D;
     private Vector3 spawnPoint = Vector3.Zero;
+    private Vector3 basePoint = Vector3.Zero;
+    private NavigationMeshInstance navMeshInstance;
+    private Player player;
+    private Camera camera;
+
+    private enum GameState { Play, Watch};
+    private GameState gameState = GameState.Play;
 
     // Wave Variables
-    private int[] waves = { 0, 5, 10 };
+    private int[] waves = { 0, 2, 5, 8, 10, 15, 20 };
     private int waveCounter = 0;
     private int currentWave = 0;
     private bool canSpawn = true;
@@ -40,6 +48,11 @@ public class GameManager : Spatial
         timer = GetNode<Timer>("SpawnTimer");
         spawnPosition3D = GetNode<Position3D>("SpawnPoint");
         spawnPoint = spawnPosition3D.GlobalTransform.origin;
+        basePosition3D = GetNode<Position3D>("BasePoint");
+        basePoint = basePosition3D.GlobalTransform.origin;
+        navMeshInstance = GetNode<NavigationMeshInstance>("Navigation/NavigationMeshInstance");
+        player = GetNode<Player>("Player");
+        camera = GetNode<Camera>("Camera");
     }
 
     public override void _Process(float delta)
@@ -56,27 +69,41 @@ public class GameManager : Spatial
             waveCounter++;
             canSpawn = false;
         }
+
+        if (enemyList.Count > 0)
+            gameState = GameState.Watch;
+        else
+            gameState = GameState.Play;
+
+        if (gameState == GameState.Play)
+        {
+            player.isEnabled = true;
+            camera.Current = false;
+        }
+        if (gameState == GameState.Watch)
+        {
+            player.isEnabled = false;
+            camera.Current = true;
+        }
+
     }
 
     public void AddEnemy(KinematicBody enemy)
     {
         enemyList.Add(enemy);
-        GD.Print(enemy + " added to list, list size is " + enemyList.Count);
     }
 
     public void RemoveEnemy(KinematicBody enemy)
     {
         enemyList.Remove(enemy);
-        GD.Print(enemy + " removed from list, list size is " + enemyList.Count);
         enemy.QueueFree();
     }
 
     private void spawnEnemy()
     {
         EnemyAgent enemy = (EnemyAgent)enemyInstance.Instance();
-        NavigationMeshInstance nav = GetNode<NavigationMeshInstance>("Navigation/NavigationMeshInstance");
-        nav.AddChild(enemy);
-        enemy.Initialise(spawnPoint, 100f, 5f, 25);
+        navMeshInstance.AddChild(enemy);
+        enemy.Initialise(spawnPoint, 100f, 5f, 25, basePoint);
     }
 
     public bool IsEnemy(KinematicBody node)
@@ -109,15 +136,22 @@ public class GameManager : Spatial
             return;
         }
         Turret turret = (Turret)turretInstance.Instance();
-        AddChild(turret);
+        navMeshInstance.AddChild(turret);
         turret.GlobalTranslation = location;
         isPlacing = false;
         gold -= turretCost;
+
+        navMeshInstance.BakeNavigationMesh();
     }
 
     public int GetGold()
     {
         return gold;
+    }
+
+    public int GetLives()
+    {
+        return lives;
     }
 
     public bool IsPlacing()
@@ -150,5 +184,10 @@ public class GameManager : Spatial
     public void RemoveLife()
     {
         lives--;
+    }
+
+    public String GetWave()
+    {
+        return currentWave.ToString() + "/" + (waves.Length - 1).ToString();
     }
 }

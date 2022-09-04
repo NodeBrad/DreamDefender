@@ -18,12 +18,16 @@ public class Player : KinematicBody
     private RayCast ray;
     private DebugSphere ds;
     private bool canPlace = false;
+    private Camera playerCamera;
+
+    public bool isEnabled = true;
 
     public override void _Ready()
     {
         head = GetNode<Spatial>("Head");
         ray = GetNode<RayCast>("Head/RayCast");
         ds = GetNode<DebugSphere>("DebugSphere");
+        playerCamera = GetNode<Camera>("Head/Camera");
 
         Input.MouseMode = Input.MouseModeEnum.Captured; // Capture the mouse
     }
@@ -35,15 +39,6 @@ public class Player : KinematicBody
         {
             Input.MouseMode = Input.MouseModeEnum.Captured; // Capture the mouse
         }
-
-        //// Toggle window capture
-        //if (@event.IsActionPressed("toggle_mouse_mode"))
-        //{
-        //    if (Input.MouseMode == Input.MouseModeEnum.Captured)
-        //        Input.MouseMode = Input.MouseModeEnum.Visible;
-        //    else
-        //        Input.MouseMode = Input.MouseModeEnum.Captured;
-        //}
 
         // Handle mouse movement
         if ((@event is InputEventMouseMotion mouseMotion) && (Input.MouseMode == Input.MouseModeEnum.Captured))
@@ -57,6 +52,13 @@ public class Player : KinematicBody
 
     public override void _PhysicsProcess(float delta)
     {
+        if (!isEnabled)
+        {
+            playerCamera.Current = false;
+            return;
+        }
+
+        playerCamera.Current = true;
         Vector3 inputVector = getInputVector();
         Vector3 direction = getDirection(inputVector);
         applyMovement(direction, delta);
@@ -67,11 +69,6 @@ public class Player : KinematicBody
 
         checkPlacement();
         manageBuilding();
-
-        if (ray.GetCollider() != null)
-            GD.Print("Yes");
-        else
-            GD.Print("no");
     }
 
     private Vector3 getInputVector()

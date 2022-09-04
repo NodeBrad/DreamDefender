@@ -1,0 +1,13 @@
+[remap]
+
+importer="qodot.map"
+type="Resource"
+path="res://.import/level.6.map-843ed78207e8caae251b8790cabf67be.tres"
+
+[deps]
+
+source_file="res://TrenchBroomMaps/autosave/level.6.map"
+dest_files=[ "res://.import/level.6.map-843ed78207e8caae251b8790cabf67be.tres" ]
+
+[params]
+
